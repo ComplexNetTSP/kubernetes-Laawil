@@ -1,0 +1,8 @@
+version: '2.32.1'
+
+services:
+    mongodb:
+        image: mongo:4.4
+        container_name: mongodb
+        ports:
+          - "27017:27017" # Expose MongoDB on port 27017

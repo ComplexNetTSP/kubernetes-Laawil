@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webdb
+  name: webdb-deployment
   namespace: mhouas
 spec:
   replicas: 3

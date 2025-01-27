@@ -1,0 +1,30 @@
+namespace: mhouas
+
+replicaCount: 3
+
+image:
+  webnodb: "mah5000/site_web:1.0.0"
+  webdb: "mah5000/site_web:3.0.0"
+  mongodb: "mongo:4.4"
+
+ports:
+  webnodb: 5000
+  webdb: 5000
+  mongodb: 27017
+
+hostnames:
+  ingressHost: net4255.luxbulb.org
+  webnodb: webnodb
+  webdb: webdb
+
+resources:
+  requests:
+    cpu: "0.1"
+    memory: "100Mi"
+  limits:
+    cpu: "0.2"
+    memory: "200Mi"
+
+mongodb:
+  dbName: flask_db
+  collectionName: requests

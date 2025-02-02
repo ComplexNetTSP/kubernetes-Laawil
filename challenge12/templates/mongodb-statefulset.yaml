@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: mongodb-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: {{ .Values.image.mongodb }}
+        ports:
+        - containerPort: {{ .Values.ports.mongodb }}
+        env:
+        - name: MONGO_URI
+          value: "mongodb://$(DB_HOST):$(DB_PORT)/"
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mongodb-config
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mongodb-config
+              key: DB_PORT
+        resources:
+          requests:
+            cpu: {{ .Values.mongodb.resources.requests.cpu }}
+            memory: {{ .Values.mongodb.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.mongodb.resources.limits.cpu }}
+            memory: {{ .Values.mongodb.resources.limits.memory }}
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.mongodb.storage.size }}
+      storageClassName: longhorn
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+  namespace: {{ .Values.namespace }}
+spec:
+  clusterIP: None
+  selector:
+    app: mongodb
+  ports:
+  - protocol: TCP
+    port: {{ .Values.ports.mongodb }}
+    targetPort: {{ .Values.ports.mongodb }}
+

@@ -1,0 +1,35 @@
+* What is a StatefulSet and in which case it is useful?
+
+Un StatefulSet gère un groupe de pods et maintient une identité unique pour chacun de ces pods.
+C'est un objet de la 'Workload API' utilisé pour gérer des applications avec état.
+Comme un déploiement, il permet de gérer des pods ayant la même spécification de conteneur.
+Contrairement à un déploiement, les pods gérés par un StatefulSet sont uniques chacun même s'ils sont déployés à partir de la même spec. le StatefulSet maintient un identifiant unique pour chacun des pods qu'il gère.  
+
+Les StatefulSet sont utiles dans les cas suivants :
+ - Des identifiants réseau stables et uniques.
+ - Un stockage persistant stable.
+ - Un déploiement et une mise à l'échelle ordonnés et contrôlés.
+ - Des mises à jour continues (rolling update) ordonnées et automatisées.
+
+Dans le cas ce challenge (12), on a utilisé un StatefulSet car il fallait utiliser un volume de stockage persistant pour la base de données.
+
+
+* What is a headless service, how pods are named with headless service?
+
+Un headless service est un service n'ayant pas de ClusterIP attaché. Au lieu d'associer une Ip virtuelle à chaque pod, ce service crée une entrée DNS pour chaque pod qui lui est associé. Le client peut alors, en utilisant ces entrées DNS, accéder directement au pod qu'il veut.
+
+Il existe deux manières d'identifier les pods avec un headless service :
+  1) avec sélecteurs : les contrôleurs créent au niveau de l'API Kubernetes des entrées DNS pointant vers les pods attachés au service.
+  2) sans sélecteurs : les contrôleurs ne créent pas des entrées DNS. Le système DNS cherche et configure :
+      - soit, pour les services de type 'ExternalName', des entrées DNS CNAME  
+      - soit,  pour les services de types autres que 'ExternalName', des entrées DNS A/AAAA (IPv4/IPv6) pour toutes les adresses IP des endpoints actifs du service
+Il faut alors une correspondance entre les champs 'port' et 'targetPort' dans la 'spec' du service.
+
+En déployant un StatefulSet, Kubernetes crée automatiquement un headless service pour permettre une communication directe avec chacun des pods.
+
+
+Références :
+[1] : https://kubernetes.io/fr/docs/concepts/workloads/controllers/statefulset/
+[2] : https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+[3] : https://medium.com/@bubu.tripathy/headless-k8s-service-924c689607a7
+[4] : https://kubernetes.io/docs/concepts/services-networking/service/#headless-services 

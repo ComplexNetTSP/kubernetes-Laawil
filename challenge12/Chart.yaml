@@ -1,0 +1,4 @@
+apiVersion: v2
+name: mh-infrastructure
+description: Helm chart for deploying the webnodb, webdb, and MongoDB with a StatefulSet.
+version: 1.0.0

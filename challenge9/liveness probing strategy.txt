@@ -1,0 +1,5 @@
+L'application base de données est l'application la plus critique car d'une part, une seule réplique est déployée et d'autre part, l'application web n'est accessible que si la base de données est accessible. Donc on a fixé le délai d'attente initial avec le premier probe à une valeur réduite de 10s et une intervalle réduite de 5s entre les probes.
+
+Comme il y a 3 répliques de l'application web, on a fixé un délai initial plutôt élevé de 30s et le délai entre es probes est 10s.
+
+La valeur failureThreshhold : nombre de probes échoués avant le redémarrage d'un pod est maintenue à la valeur par défaut 3.
